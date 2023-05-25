@@ -13,7 +13,7 @@ class TictacApp(ttk.Frame):
     def button_masu(self):
         for i in range(squares):
             for j in range(squares):
-                button = ttk.Button(self, command=lambda i=i, j=j: self.record(i, j))
+                button = ttk.Button(self, command=self.record(i, j))
                 button.bind('<Button-1>', self.mark)
                 button.grid(column=i, row=j, sticky=(N, S, E, W))
 
@@ -29,10 +29,9 @@ class TictacApp(ttk.Frame):
     def mark(self, event):
         if not event.widget['text']:
             if self.player == 1:
-                event.widget['text'] = '〇'
+                event.widget['text'] = str('〇')
             else:
-                event.widget['text'] = '×'
-            self.turn()
+                event.widget['text'] = str('×')
 
     def value(self):
         self.player = 1
@@ -51,7 +50,7 @@ class TictacApp(ttk.Frame):
         return x
 
     def winner_check(self):
-        naname = 0
+        
         for i in range(squares):
             yoko = 0
             tate = 0
@@ -60,11 +59,17 @@ class TictacApp(ttk.Frame):
                     yoko += 1
                 if self.field[j][i] == self.player:
                     tate += 1
-            if self.field[i][i] == self.player:
-                naname += 1
-            if yoko == 3 or tate == 3 or naname == 3:
+            if yoko == 3 or tate == 3:
                 self.result()
-        if self.field[0][2] == self.field[1][1] == self.field[2][0] == self.player:
+
+        naname1 = 0
+        naname2 = 0
+        for i in range(squares):
+            if self.field[i][i] == self.player:
+                    naname1 += 1
+            if self.field[i][squares - i - 1] == self.player:
+                naname2 += 1
+        if naname1 == 3 or naname2 == 3:
             self.result()
 
     def turn(self):
@@ -73,9 +78,9 @@ class TictacApp(ttk.Frame):
 
     def result(self):
         if self.player == 1:
-            messagebox.showinfo('〇のプレイヤーの勝利！')
+            messagebox.showinfo('結果','〇のプレイヤーの勝利！')
         else:
-            messagebox.showinfo('×のプレイヤーの勝利！')
+            messagebox.showinfo('結果','×のプレイヤーの勝利！')
         self.finish = 1
 
     def clear(self):
